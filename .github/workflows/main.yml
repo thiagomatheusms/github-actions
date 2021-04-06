@@ -17,4 +17,30 @@ jobs:
           
       - name: Build with gradle
         run: ./gradlew build
+        
+      - name: Build all artifacts
+        id: buildAllApks
+        uses: eskatos/gradle-command-action@v1.3.3
+        with:
+          gradle-version: current
+          wrapper-cache-enabled: true
+          dependencies-cache-enabled: true
+          configuration-cache-enabled: true
+          arguments: assembleRelease
+          
+      - name: Sign artifact
+        id: signArtifact
+        uses: r0adkll/sign-android-release@v1.0.1
+        with:
+          releaseDirectory: app/build/outputs/apk/ourbuildtype/release
+          alias: ${{ secrets.KEY_ALIAS }}
+          signingKeyBase64: ${{ secrets.KEY_STORE }}
+          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Upload our APK
+        uses: actions/upload-artifact@v2.2.0
+        with:
+          name: Release artifact
+          path: app/build/outputs/apk/ourbuildtype/release/app-artifact-*.apk
 
