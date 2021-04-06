@@ -8,10 +8,10 @@ jobs:
 
     steps:
 
-      -name: Checkout
+      - name: Checkout
       uses: actions/checkout@v2.3.3
 
-      -name: Setup JDK
+      - name: Setup JDK
       uses: actions/setup-java@v2.0.0
       with:
         java-version: 1.8
